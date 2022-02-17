@@ -4,7 +4,8 @@
   "description": "A solidity-driven kickstarter application (from course)",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "export SET NODE_OPTIONS=--openssl-legacy-provider && mocha",
+    "deploy": "export SET NODE_OPTIONS=--openssl-legacy-provider && node deploy.js"
   },
   "repository": {
     "type": "git",
