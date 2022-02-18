@@ -41,10 +41,12 @@ describe("Campaigns", () => {
     assert.ok(factory.options.address);
     assert.ok(campaign.options.address);
   });
+
   it("make sure manager is creator of contract", async () => {
     const manager = await campaign.methods.manager().call();
     assert.equal(accounts[0], manager);
   });
+
   it("allows people to contribute money and marks them as approvers", async () => {
     await campaign.methods.contribute().send({
       value: "200",
@@ -53,12 +55,81 @@ describe("Campaigns", () => {
     const isApprover = await campaign.methods.approvers(accounts[1]).call();
     assert(isApprover);
   });
+
   it("denies approver status to those who do not meet minimum donation requirements", async () => {
     try {
       await campaign.methods.contribute().send({
         value: "90",
         from: accounts[1],
       });
+      assert(false);
+    } catch (error) {
+      assert(error);
+    }
+  });
+
+  it("allows a manager to make a payment request", async () => {
+    await campaign.methods
+      .createRequest("Buy batteries", "100", accounts[1])
+      .send({
+        from: accounts[0],
+        gas: "1000000",
+      });
+    const request = await campaign.methods.requests(0).call();
+    assert.equal("Buy batteries", request.description);
+  });
+
+  it("processes request", async () => {
+    //Get initial balance of accounts[1]
+    let initialBalance = await web3.eth.getBalance(accounts[1]);
+    initialBalance = web3.utils.fromWei(initialBalance, "ether");
+    initialBalance = parseFloat(initialBalance);
+    //Contribute to account
+    await campaign.methods.contribute().send({
+      from: accounts[0],
+      value: web3.utils.toWei("10", "ether"),
+    });
+    //Create request
+    await campaign.methods
+      .createRequest(
+        "Buy batteries",
+        web3.utils.toWei("5", "ether"),
+        accounts[1]
+      )
+      .send({
+        from: accounts[0],
+        gas: "1000000",
+      });
+    //Vote
+    await campaign.methods.approveRequest(0).send({
+      from: accounts[0],
+      gas: "1000000",
+    });
+    //Finalize request
+    await campaign.methods.finalizeRequest(0).send({
+      from: accounts[0],
+      gas: "1000000",
+    });
+
+    //Final balance of account[1]
+    let finalBalance = await web3.eth.getBalance(accounts[1]);
+    finalBalance = web3.utils.fromWei(finalBalance, "ether");
+    finalBalance = parseFloat(finalBalance);
+
+    //Difference should be around 5 ether (5 ether sent from account[0] -> account[1])
+    const difference = finalBalance - initialBalance;
+    assert(difference > 4);
+  });
+
+  it("blocks non-manager from making payment request", async () => {
+    try {
+      await campaign.methods
+        .createRequest("Buy batteries", "100", accounts[2])
+        .send({
+          from: accounts[1],
+          gas: "1000000",
+        });
+      const request = await campaign.methods.requests(0).call();
       assert(false);
     } catch (error) {
       assert(error);
