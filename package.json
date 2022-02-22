@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "export SET NODE_OPTIONS=--openssl-legacy-provider && mocha",
-    "deploy": "export SET NODE_OPTIONS=--openssl-legacy-provider && node ethereum/deploy.js"
+    "deploy": "export SET NODE_OPTIONS=--openssl-legacy-provider && node ethereum/deploy.js",
+    "dev": "export SET NODE_OPTIONS=--openssl-legacy-provider && next dev"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,11 @@
     "fs-extra": "^10.0.0",
     "ganache-cli": "^6.12.2",
     "mocha": "^9.2.0",
+    "next": "^12.1.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.1.2",
     "solc": "^0.8.12",
     "web3": "^1.7.0"
   }
