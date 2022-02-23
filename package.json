@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "export SET NODE_OPTIONS=--openssl-legacy-provider && mocha",
+    "compile": "export SET NODE_OPTIONS=--openssl-legacy-provider && cd ethereum && rm -rf build/ && node compile.js",
     "deploy": "export SET NODE_OPTIONS=--openssl-legacy-provider && node ethereum/deploy.js",
     "dev": "export SET NODE_OPTIONS=--openssl-legacy-provider && node server.js"
   },

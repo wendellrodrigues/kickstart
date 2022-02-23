@@ -80,6 +80,26 @@ contract Campaign {
         r.recipient.transfer(r.value);//Send to recipient
         r.complete = true; //Mark as completed
     }
+
+    function getSummary() public view returns (
+        uint,
+        uint,
+        uint,
+        uint,
+        address
+    ) {
+        return(     
+            minContribution,
+            address(this).balance,
+            numRequests,
+            approversCount,
+            manager
+        );
+    }
+
+    function getRequestsCount() public view returns (uint) {
+        return numRequests;
+    }
   
 }
 

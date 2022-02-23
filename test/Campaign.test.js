@@ -135,4 +135,17 @@ describe("Campaigns", () => {
       assert(error);
     }
   });
+
+  it("gets campaign statistics", async () => {
+    const summary = await campaign.methods.getSummary().call();
+    const manager = await campaign.methods.manager().call();
+    assert(summary[0] == "100");
+    assert(summary[1] == "0");
+    assert(summary[4] == manager);
+  });
+
+  it("displays requests count", async () => {
+    const requestsCount = await campaign.methods.getRequestsCount().call();
+    assert(requestsCount == "0");
+  });
 });
