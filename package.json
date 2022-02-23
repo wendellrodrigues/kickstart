@@ -6,7 +6,7 @@
   "scripts": {
     "test": "export SET NODE_OPTIONS=--openssl-legacy-provider && mocha",
     "deploy": "export SET NODE_OPTIONS=--openssl-legacy-provider && node ethereum/deploy.js",
-    "dev": "export SET NODE_OPTIONS=--openssl-legacy-provider && next dev"
+    "dev": "export SET NODE_OPTIONS=--openssl-legacy-provider && node server.js"
   },
   "repository": {
     "type": "git",
